@@ -1,4 +1,4 @@
-package com.fadgiras.exos;
+package com.fadgiras.exos.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
