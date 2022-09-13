@@ -1,4 +1,5 @@
 package com.fadgiras.exos.controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -6,9 +7,10 @@ import java.util.*;
 
 //Utile pour forcer le type de retour
 import org.springframework.http.MediaType;
-
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fadgiras.exos.model.Employee;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -50,4 +52,14 @@ public class JsonController{
                 return res;
         }
 
+        @RequestMapping(value = "/employee/toJSON", method = RequestMethod.POST)
+        public String transformer(Model model, @ModelAttribute("Employee") Employee employee) throws JsonProcessingException{
+                ObjectMapper objectMapper= new ObjectMapper();
+
+                model.addAttribute("Employee", employee);
+                
+                System.out.println(objectMapper.writeValueAsString(employee));
+                
+                return objectMapper.writeValueAsString(employee);
+        }
 }

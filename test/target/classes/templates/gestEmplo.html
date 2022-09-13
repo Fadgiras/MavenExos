@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
     <head>
         <title>GestEmplo</title>
         <meta charset="UTF-8">
@@ -8,15 +8,15 @@
     <body>
         <h1>Adding Employee</h1>
 
-        <form action="/api/v1/employees" method="post">
+        <form role="form" th:action="@{/employee/toJSON}" method="post" th:object ="${employee}">
             <label>Form</label>
             </form>
             <br>
-            <input type="text" name="firstName" placeholder="First Name">
+            <input type="text" name="firstName" placeholder="First Name" th:field = "*{firstName}">
             <br>
-            <input type="text" name="lastName" placeholder="Last Name">
+            <input type="text" name="lastName" placeholder="Last Name" th:field = "*{lastName}">
             <br>
-            <input type="text" name="emailId" placeholder="Email">
+            <input type="email" name="emailId" placeholder="Email" th:field = "*{emailId}">
             <br>
             <button type="submit">Add</button>
         </form>
