@@ -13,9 +13,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
+import java.security.*;
 
 @Service
 public class StorageService {
@@ -24,6 +26,29 @@ public class StorageService {
 
     @Autowired
     private FilesRepository filesRepository;
+
+    public static String hash(String input){
+        byte[] msg = input.getBytes();
+        byte[] hash = null;
+
+        try
+        {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            hash = md.digest(msg);
+        }
+        catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        StringBuilder strBuilder = new StringBuilder();
+        for(byte b:hash)
+        {
+            strBuilder.append(String.format("%02x", b));
+        }
+        String strHash = strBuilder.toString();
+
+        return strHash;
+    }    
 
     public void uploadFile(MultipartFile file) {
 
@@ -35,16 +60,24 @@ public class StorageService {
         try {
             //Maybe add file name hash ?
             //TODO Create object in DB only after success:  avoid creating inexisting object
-            final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
+            final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+            final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-            String fileName = sdf1.format(timestamp).toString()+"_"+file.getOriginalFilename();
+            String fileName = sdf1.format(timestamp).toString()+"_"+hash(file.getOriginalFilename());
 
             var is = file.getInputStream();
 
-            Files.copy(is, Paths.get(path + fileName),
-                    StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(is, Paths.get(path + fileName),StandardCopyOption.REPLACE_EXISTING);
+
+            //Creating object in DB
+
+            File fileToSave = new File(file.getOriginalFilename(), fileName, Date.valueOf(sdf2.format(timestamp).toString()));
+
+            filesRepository.save(fileToSave);
+
+            
         } catch (IOException e) {
 
             String msg ="Failed to store file :"+ file.getName().toString();
@@ -64,12 +97,12 @@ public class StorageService {
         String filename  = file.getName();
         //Deleting file
         try {
-            boolean result = Files.deleteIfExists(Paths.get(filename));
-            if (result) {
-                System.out.println("File is deleted!");
-            } else {
-                System.out.println("Sorry, unable to delete the file.");
-            }
+            //Delete on disk
+            Files.deleteIfExists(Paths.get(path+filename));
+
+            //Delete object in DB
+            filesRepository.delete(file);
+
         } catch (IOException e) {
             String msg ="Failed to delete file :"+ file.getName().toString();
 
@@ -79,7 +112,10 @@ public class StorageService {
     }
 
     public void downloadFile(long id) {
-        
+        Optional<File> optionalEntity =  filesRepository.findById(id);
+        File file = optionalEntity.get();
+
+
     }
 
 }
