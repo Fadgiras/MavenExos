@@ -2,6 +2,9 @@ package com.fadgiras.exos.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +13,7 @@ import com.fadgiras.exos.model.File;
 import com.fadgiras.exos.repository.FilesRepository;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -26,6 +30,11 @@ public class StorageService {
 
     @Autowired
     private FilesRepository filesRepository;
+
+    private ResourceLoader resourceLoader;
+    public void setResourceLoader(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader; 
+    }
 
     public static String hash(String input){
         byte[] msg = input.getBytes();
@@ -58,8 +67,6 @@ public class StorageService {
         }
 
         try {
-            //Maybe add file name hash ?
-            //TODO Create object in DB only after success:  avoid creating inexisting object
             final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
             final SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -111,11 +118,16 @@ public class StorageService {
         }
     }
 
-    public void downloadFile(long id) {
+    public Resource downloadFile(long id) throws MalformedURLException {
         Optional<File> optionalEntity =  filesRepository.findById(id);
         File file = optionalEntity.get();
-
-
+        String filename  = file.getName();
+        Resource resource = this.resourceLoader.getResource(path+filename);
+        System.out.println("bouh3");
+        if (resource.exists()) {
+            return resource;
+        } else {
+            throw new StorageException("Resource does not exist : " + path+filename);
+        }
     }
-
 }
