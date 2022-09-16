@@ -4,7 +4,6 @@ com\fadgiras\exos\controller\EmployeeController.class
 com\fadgiras\exos\controller\UploadController.class
 com\fadgiras\exos\exception\StorageException.class
 com\fadgiras\exos\Upload.class
-com\fadgiras\exos\service\StorageService.class
 com\fadgiras\exos\exception\ErrorDetails.class
 com\fadgiras\exos\exception\GlobalExceptionHandler.class
 com\fadgiras\exos\repository\EmployeeRepository.class

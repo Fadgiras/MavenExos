@@ -6,13 +6,13 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "files")
-public class File {
+public class DBFile {
 
-    public File(){
+    public DBFile(){
 
     }
 
-    public File(String originalName, String name, Date createdAt){
+    public DBFile(String originalName, String name, Date createdAt){
         this.originalName = originalName;
         this.name = name;
         this.createdAt = createdAt;  

@@ -2,6 +2,8 @@ package com.fadgiras.exos.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
@@ -9,9 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fadgiras.exos.exception.StorageException;
-import com.fadgiras.exos.model.File;
+import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -30,7 +33,7 @@ public class StorageService {
 
     @Autowired
     private FilesRepository filesRepository;
-
+    @Autowired
     private ResourceLoader resourceLoader;
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader; 
@@ -58,7 +61,7 @@ public class StorageService {
 
         return strHash;
     }    
-
+    //TODO Add proper extensions to files
     public void uploadFile(MultipartFile file) {
 
         if (file.isEmpty()) {
@@ -80,7 +83,7 @@ public class StorageService {
 
             //Creating object in DB
 
-            File fileToSave = new File(file.getOriginalFilename(), fileName, Date.valueOf(sdf2.format(timestamp).toString()));
+            DBFile fileToSave = new DBFile(file.getOriginalFilename(), fileName, Date.valueOf(sdf2.format(timestamp).toString()));
 
             filesRepository.save(fileToSave);
 
@@ -99,8 +102,8 @@ public class StorageService {
         
 
         //Find the file to delete
-        Optional<File> optionalEntity =  filesRepository.findById(id);
-        File file = optionalEntity.get();
+        Optional<DBFile> optionalEntity =  filesRepository.findById(id);
+        DBFile file = optionalEntity.get();
         String filename  = file.getName();
         //Deleting file
         try {
@@ -119,13 +122,23 @@ public class StorageService {
     }
 
     public Resource downloadFile(long id) throws MalformedURLException {
-        Optional<File> optionalEntity =  filesRepository.findById(id);
-        File file = optionalEntity.get();
+        Optional<DBFile> optionalEntity =  filesRepository.findById(id);
+        DBFile file = optionalEntity.get();
+
+        File filetest = new File("bouh");
+
         String filename  = file.getName();
-        Resource resource = this.resourceLoader.getResource(path+filename);
-        System.out.println("bouh3");
-        if (resource.exists()) {
-            return resource;
+        Resource resource = resourceLoader.getResource(path+filename);
+
+        FileSystemResource resource2 = new FileSystemResource(path+filename);
+
+        System.out.println(resource2.getFile().toString());
+
+        System.out.println(resource.toString());
+        //TODO absolute path
+        if (resource2.exists()) {
+            System.out.println("rsc exist");
+            return resource2;
         } else {
             throw new StorageException("Resource does not exist : " + path+filename);
         }

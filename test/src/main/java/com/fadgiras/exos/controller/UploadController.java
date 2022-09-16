@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fadgiras.exos.exception.StorageException;
-import com.fadgiras.exos.model.File;
+import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
 import com.fadgiras.exos.service.StorageService;
 
@@ -40,6 +40,7 @@ public class UploadController {
     @Autowired
     private StorageService storageService;
     //TODO changes the return values : won't do right in a SPA
+    //TODO code erreurs type : SE01 etc à la place des exceptions
 
     @RequestMapping(value = "/fileUpload", method = RequestMethod.POST,
             consumes = {"multipart/form-data"})
@@ -67,6 +68,7 @@ public class UploadController {
         try {
             resource  = storageService.downloadFile(id);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new StorageException("The resource couldn't be loaded");
         }
         
@@ -75,6 +77,7 @@ public class UploadController {
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
             System.out.println("Content type ok");
+            System.out.println(contentType);
         } catch (IOException e) {
             logger.info("Could not determine file type.");
 
@@ -86,8 +89,8 @@ public class UploadController {
         //Get file original name
         String filename= new String();
         try {
-            Optional<File> optionalEntity =  filesRepository.findById(id);
-            File file = optionalEntity.get();
+            Optional<DBFile> optionalEntity =  filesRepository.findById(id);
+            DBFile file = optionalEntity.get();
             filename = file.getOriginalName();
         } catch (Exception e) {
             String msg ="Failed to get filename : ";

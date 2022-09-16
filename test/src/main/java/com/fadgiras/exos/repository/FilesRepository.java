@@ -3,9 +3,9 @@ package com.fadgiras.exos.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fadgiras.exos.model.File;
+import com.fadgiras.exos.model.DBFile;
 
 @Repository
-public interface FilesRepository extends JpaRepository<File, Long> {
+public interface FilesRepository extends JpaRepository<DBFile, Long> {
     
 }
