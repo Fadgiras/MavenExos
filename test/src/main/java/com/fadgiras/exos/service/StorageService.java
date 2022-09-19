@@ -2,19 +2,13 @@ package com.fadgiras.exos.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fadgiras.exos.exception.StorageException;
 import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -24,6 +18,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
+import java.util.UUID;
 import java.security.*;
 
 @Service
@@ -33,12 +28,8 @@ public class StorageService {
 
     @Autowired
     private FilesRepository filesRepository;
-    @Autowired
-    private ResourceLoader resourceLoader;
-    public void setResourceLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader; 
-    }
 
+    //won't use it, just keepin it here 
     public static String hash(String input){
         byte[] msg = input.getBytes();
         byte[] hash = null;
@@ -61,12 +52,13 @@ public class StorageService {
 
         return strHash;
     }    
-    //TODO Add proper extensions to files
-    public void uploadFile(MultipartFile file) {
+    
+
+    public void uploadFile(MultipartFile file) throws StorageException {
 
         if (file.isEmpty()) {
 
-            throw new StorageException("Failed to store empty file");
+            throw new StorageException("Failed to store empty file", "SE101");
         }
 
         try {
@@ -75,15 +67,18 @@ public class StorageService {
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-            String fileName = sdf1.format(timestamp).toString()+"_"+hash(file.getOriginalFilename());
+            //Need to bypass some of the MIME types, 
+            String uuid = UUID.randomUUID().toString();
+            String fileName = sdf1.format(timestamp).toString()+"_"+uuid;
+            String fileExt = file.getOriginalFilename().split("\\.")[1];
 
             var is = file.getInputStream();
 
-            Files.copy(is, Paths.get(path + fileName),StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(is, Paths.get(path + fileName+"."+fileExt),StandardCopyOption.REPLACE_EXISTING);
 
             //Creating object in DB
 
-            DBFile fileToSave = new DBFile(file.getOriginalFilename(), fileName, Date.valueOf(sdf2.format(timestamp).toString()));
+            DBFile fileToSave = new DBFile(uuid, file.getOriginalFilename(), fileName, Date.valueOf(sdf2.format(timestamp).toString()), fileExt);
 
             filesRepository.save(fileToSave);
 
@@ -92,13 +87,13 @@ public class StorageService {
 
             String msg ="Failed to store file :"+ file.getName().toString();
 
-            throw new StorageException(msg, e);
+            throw new StorageException(msg, e, "SE102");
         }
     }
 
-    //TODO Add delete, download option, maybe update
+    //TODO Maybe add update (delete and add)
 
-    public void deleteFile(Long id) {
+    public void deleteFile(Long id) throws StorageException {
         
 
         //Find the file to delete
@@ -116,31 +111,24 @@ public class StorageService {
         } catch (IOException e) {
             String msg ="Failed to delete file :"+ file.getName().toString();
 
-            throw new StorageException(msg, e);
+            throw new StorageException(msg, e, "SE103");
             
         }
     }
 
-    public Resource downloadFile(long id) throws MalformedURLException {
+    public FileSystemResource downloadFile(long id) throws MalformedURLException, StorageException {
+
         Optional<DBFile> optionalEntity =  filesRepository.findById(id);
         DBFile file = optionalEntity.get();
-
-        File filetest = new File("bouh");
-
         String filename  = file.getName();
-        Resource resource = resourceLoader.getResource(path+filename);
-
-        FileSystemResource resource2 = new FileSystemResource(path+filename);
-
-        System.out.println(resource2.getFile().toString());
-
-        System.out.println(resource.toString());
-        //TODO absolute path
-        if (resource2.exists()) {
-            System.out.println("rsc exist");
-            return resource2;
+        String fileExt = file.getExtension();
+        String fullFilePath = path+filename+"."+fileExt;
+        
+        FileSystemResource resource = new FileSystemResource(fullFilePath);
+        if (resource.exists()) {
+            return resource;
         } else {
-            throw new StorageException("Resource does not exist : " + path+filename);
+            throw new StorageException("Resource does not exist : " +fullFilePath, "SE104");
         }
     }
 }
