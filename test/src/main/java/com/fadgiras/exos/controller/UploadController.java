@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fadgiras.exos.enums.ErrorCodeEnum;
 import com.fadgiras.exos.exception.StorageException;
 import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
@@ -39,7 +40,6 @@ public class UploadController {
     @Autowired
     private StorageService storageService;
     //TODO changes the return values : won't do right in a SPA
-    //TODO code erreurs type : SE01 etc à la place des exceptions
 
     //TODO Restrict file extensions : pdf, doc, docx, txt
     @RequestMapping(value = "/fileUpload", method = RequestMethod.POST,
@@ -59,7 +59,7 @@ public class UploadController {
             Optional<DBFile> optionalEntity =  filesRepository.findFileByUUID(uuid);
             file = optionalEntity.get();        
         } catch (Exception e) {
-            throw new StorageException("Failed to load file", "SE001-E");
+            throw new StorageException(ErrorCodeEnum.SE001E.name());
         }
 
         storageService.deleteFile(file.getId());
@@ -78,14 +78,14 @@ public class UploadController {
             Optional<DBFile> optionalEntity =  filesRepository.findFileByUUID(uuid);
             file = optionalEntity.get();        
         } catch (Exception e) {
-            throw new StorageException("Failed to load file", "SE001-D");
+            throw new StorageException(ErrorCodeEnum.SE001D.name());
         }
 
         try {
             resource  = storageService.downloadFile(file.getId());
         } catch (Exception e) {
             e.printStackTrace();
-            throw new StorageException("The resource couldn't be loaded","SE002");
+            throw new StorageException(ErrorCodeEnum.SE002.name());
         }
         
         //Try to determine file's content type
@@ -95,9 +95,7 @@ public class UploadController {
         } catch (IOException e) {
             logger.info("Could not determine file type.");
 
-            String msg ="Failed to retrieve content-type : "+ resource.toString();
-
-            throw new StorageException(msg, e, "SE003");
+            throw new StorageException(ErrorCodeEnum.SE003.name());
         }
 
         //Get file original name
@@ -105,9 +103,7 @@ public class UploadController {
         try {
             filename = file.getOriginalName();
         } catch (Exception e) {
-            String msg ="Failed to get filename : ";
-
-            throw new StorageException(msg, e, "SE004");
+            throw new StorageException(ErrorCodeEnum.SE004.name());
         }
         
 

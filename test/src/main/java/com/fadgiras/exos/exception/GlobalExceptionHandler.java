@@ -18,13 +18,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StorageException.class)
     public ResponseEntity<?> storageExceptionHandler(Exception ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false), ((StorageException) ex).getErrorCode());
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ((StorageException) ex).getErrorCode(), request.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.EXPECTATION_FAILED);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> globalExceptionHandler(Exception ex, WebRequest request) {
-        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }

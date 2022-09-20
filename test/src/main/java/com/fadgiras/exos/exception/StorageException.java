@@ -14,6 +14,11 @@ public class StorageException extends Exception {
         this.errorCode = errorCode;
     }
 
+    public StorageException(String errorCode){
+        super();
+        this.errorCode = errorCode;
+    }
+
     public String getErrorCode() {
         return errorCode;
     }

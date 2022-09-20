@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fadgiras.exos.exception.StorageException;
 import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
+import com.fadgiras.exos.enums.ErrorCodeEnum;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -58,7 +59,7 @@ public class StorageService {
 
         if (file.isEmpty()) {
 
-            throw new StorageException("Failed to store empty file", "SE101");
+            throw new StorageException(ErrorCodeEnum.SE101.name());
         }
 
         try {
@@ -85,9 +86,7 @@ public class StorageService {
             
         } catch (IOException e) {
 
-            String msg ="Failed to store file :"+ file.getName().toString();
-
-            throw new StorageException(msg, e, "SE102");
+            throw new StorageException(ErrorCodeEnum.SE102.name());
         }
     }
 
@@ -110,9 +109,8 @@ public class StorageService {
             filesRepository.delete(file);
 
         } catch (IOException e) {
-            String msg ="Failed to delete file :"+ file.getName().toString();
 
-            throw new StorageException(msg, e, "SE103");
+            throw new StorageException(ErrorCodeEnum.SE103.name());
             
         }
     }
@@ -129,7 +127,7 @@ public class StorageService {
         if (resource.exists()) {
             return resource;
         } else {
-            throw new StorageException("Resource does not exist : " +fullFilePath, "SE104");
+            throw new StorageException(ErrorCodeEnum.SE104.name());
         }
     }
 }
