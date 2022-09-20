@@ -100,10 +100,11 @@ public class StorageService {
         Optional<DBFile> optionalEntity =  filesRepository.findById(id);
         DBFile file = optionalEntity.get();
         String filename  = file.getName();
+        String fileExt = file.getExtension();
         //Deleting file
         try {
             //Delete on disk
-            Files.deleteIfExists(Paths.get(path+filename));
+            Files.deleteIfExists(Paths.get(path+filename+"."+fileExt));
 
             //Delete object in DB
             filesRepository.delete(file);
@@ -123,7 +124,7 @@ public class StorageService {
         String filename  = file.getName();
         String fileExt = file.getExtension();
         String fullFilePath = path+filename+"."+fileExt;
-        
+
         FileSystemResource resource = new FileSystemResource(fullFilePath);
         if (resource.exists()) {
             return resource;

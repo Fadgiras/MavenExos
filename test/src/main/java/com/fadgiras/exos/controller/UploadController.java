@@ -25,7 +25,6 @@ import com.fadgiras.exos.exception.StorageException;
 import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
 import com.fadgiras.exos.service.StorageService;
-import com.fadgiras.exos.exception.GlobalExceptionHandler;
 
 @RestController
 @RequestMapping("/api")
@@ -53,36 +52,37 @@ public class UploadController {
     }
 
 
-    @RequestMapping(value = "/fileDelete/{id}", method = RequestMethod.DELETE)
-    public String delete(@PathVariable(value="id") Long fileId) throws StorageException{
+    @RequestMapping(value = "/fileDelete/{uuid}", method = RequestMethod.DELETE)
+    public String delete(@PathVariable(value="uuid") String uuid) throws StorageException{
+        DBFile file;
+        try {
+            Optional<DBFile> optionalEntity =  filesRepository.findFileByUUID(uuid);
+            file = optionalEntity.get();        
+        } catch (Exception e) {
+            throw new StorageException("Failed to load file", "SE001-E");
+        }
 
-        storageService.deleteFile(fileId);
+        storageService.deleteFile(file.getId());
 
         return "redirect:/success.html";
     
     }
 
     //Maybe switch from id to filename
-    @RequestMapping(value = "/fileDownload/{id}", method = RequestMethod.GET)
-    public ResponseEntity download(@PathVariable Long id, HttpServletRequest request) throws MalformedURLException, StorageException {
+    @RequestMapping(value = "/fileDownload/{uuid}", method = RequestMethod.GET)
+    public ResponseEntity<?> download(@PathVariable String uuid, HttpServletRequest request) throws MalformedURLException, StorageException {
 
         //Loading file
-        DBFile file;
-        //TODO Use this UUID file finder to switch from ID to UUID in URL
-        Optional<DBFile> optionalEntity =  filesRepository.findFileByUUID("236c4a1e-b11b-4015-9d83-6ec5a8585edc");
-        file = optionalEntity.get();
-
-        System.out.println(file.toString());
-
+        DBFile file;        
         try {
-            optionalEntity =  filesRepository.findById(id);
-            file = optionalEntity.get();
+            Optional<DBFile> optionalEntity =  filesRepository.findFileByUUID(uuid);
+            file = optionalEntity.get();        
         } catch (Exception e) {
-            throw new StorageException("Failed to load file", "SE001");
+            throw new StorageException("Failed to load file", "SE001-D");
         }
 
         try {
-            resource  = storageService.downloadFile(id);
+            resource  = storageService.downloadFile(file.getId());
         } catch (Exception e) {
             e.printStackTrace();
             throw new StorageException("The resource couldn't be loaded","SE002");
