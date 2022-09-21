@@ -18,9 +18,9 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import java.security.*;
 
 @Service
 public class StorageService {
@@ -30,36 +30,19 @@ public class StorageService {
     @Autowired
     private FilesRepository filesRepository;
 
-    //won't use it, just keepin it here 
-    public static String hash(String input){
-        byte[] msg = input.getBytes();
-        byte[] hash = null;
-
-        try
-        {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            hash = md.digest(msg);
-        }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        StringBuilder strBuilder = new StringBuilder();
-        for(byte b:hash)
-        {
-            strBuilder.append(String.format("%02x", b));
-        }
-        String strHash = strBuilder.toString();
-
-        return strHash;
-    }    
-    
-
     public void uploadFile(MultipartFile file) throws StorageException {
 
         if (file.isEmpty()) {
 
             throw new StorageException(ErrorCodeEnum.SE101.name());
+        }
+
+        //Verify File ext
+        String fileExt = file.getOriginalFilename().split("\\.")[1];
+        String[] authorizedExt = {"pdf","doc","docx","txt","odt"};
+        //if the File isn't an authorized one : yeet an exception
+        if(!Arrays.asList(authorizedExt).contains(fileExt)){
+            throw new StorageException(ErrorCodeEnum.SE005.name());
         }
 
         try {
@@ -68,10 +51,8 @@ public class StorageService {
 
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-            //Need to bypass some of the MIME types, 
             String uuid = UUID.randomUUID().toString();
             String fileName = sdf1.format(timestamp).toString()+"_"+uuid;
-            String fileExt = file.getOriginalFilename().split("\\.")[1];
 
             var is = file.getInputStream();
 

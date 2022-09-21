@@ -26,12 +26,14 @@ import com.fadgiras.exos.exception.StorageException;
 import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
 import com.fadgiras.exos.service.StorageService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api")
-public class UploadController {
+public class FileController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileController.class);
     private Resource resource;
 
     @Autowired
@@ -39,21 +41,23 @@ public class UploadController {
 
     @Autowired
     private StorageService storageService;
-    //TODO changes the return values : won't do right in a SPA
 
-    //TODO Restrict file extensions : pdf, doc, docx, txt
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
     @RequestMapping(value = "/fileUpload", method = RequestMethod.POST,
-            consumes = {"multipart/form-data"})
-    public String upload(@RequestParam MultipartFile file) throws StorageException {
+            consumes = {"multipart/form-data"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String upload(@RequestParam MultipartFile file) throws StorageException, JsonProcessingException {
 
         storageService.uploadFile(file);
 
-        return "redirect:/success.html";
+        return objectMapper.writeValueAsString("ok");
     }
 
 
-    @RequestMapping(value = "/fileDelete/{uuid}", method = RequestMethod.DELETE)
-    public String delete(@PathVariable(value="uuid") String uuid) throws StorageException{
+    @RequestMapping(value = "/fileDelete/{uuid}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public String delete(@PathVariable(value="uuid") String uuid) throws StorageException, JsonProcessingException{
         DBFile file;
         try {
             Optional<DBFile> optionalEntity =  filesRepository.findFileByUUID(uuid);
@@ -64,11 +68,10 @@ public class UploadController {
 
         storageService.deleteFile(file.getId());
 
-        return "redirect:/success.html";
-    
+        return objectMapper.writeValueAsString("ok");
     }
 
-    //Maybe switch from id to filename
+
     @RequestMapping(value = "/fileDownload/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<?> download(@PathVariable String uuid, HttpServletRequest request) throws MalformedURLException, StorageException {
 

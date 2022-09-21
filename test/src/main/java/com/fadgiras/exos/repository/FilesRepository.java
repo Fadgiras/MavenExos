@@ -11,7 +11,6 @@ import com.fadgiras.exos.model.DBFile;
 
 @Repository
 public interface FilesRepository extends JpaRepository<DBFile, Long> {
-    @Query(
-    value = "SELECT * FROM files f WHERE f.uuid = :uuid", nativeQuery = true)
+    @Query("SELECT f FROM DBFile f WHERE f.UUID = :uuid")
     Optional<DBFile> findFileByUUID(@Param("uuid") String uuid);
 }
