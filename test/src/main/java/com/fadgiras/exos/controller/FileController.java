@@ -2,8 +2,11 @@ package com.fadgiras.exos.controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Access;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,7 +31,9 @@ import com.fadgiras.exos.model.DBFile;
 import com.fadgiras.exos.repository.FilesRepository;
 import com.fadgiras.exos.service.StorageService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
 @RequestMapping("/api")
@@ -115,5 +121,24 @@ public class FileController {
         .contentType(MediaType.parseMediaType(contentType))
         .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
         .body(resource);
+    }
+
+    @CrossOrigin(origins = {"http://127.0.0.1:3000", "http://127.0.0.1:8080"})
+    @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> fileList() throws JsonProcessingException{
+        List<DBFile> files = new ArrayList<DBFile>();
+        files = filesRepository.findAll();
+        JsonNode jsonNode =  objectMapper.readTree(objectMapper.writeValueAsString(files));
+        //removing id for security purposes
+        for (JsonNode fileNode : jsonNode) {
+            if (fileNode instanceof ObjectNode) {
+                ObjectNode object = (ObjectNode) fileNode;
+                object.remove("id");
+                object.remove("name");
+                object.remove("extension");
+            }
+        }
+
+        return ResponseEntity.ok().body(objectMapper.writeValueAsString(jsonNode));
     }
 }
