@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.Access;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -36,6 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @RestController
+@CrossOrigin(origins = {"http://127.0.0.1:3000"})
 @RequestMapping("/api")
 public class FileController {
 
@@ -123,7 +123,6 @@ public class FileController {
         .body(resource);
     }
 
-    @CrossOrigin(origins = {"http://127.0.0.1:3000", "http://127.0.0.1:8080"})
     @RequestMapping(value = "/files", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> fileList() throws JsonProcessingException{
         List<DBFile> files = new ArrayList<DBFile>();
