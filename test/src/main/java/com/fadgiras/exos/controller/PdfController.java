@@ -1,6 +1,7 @@
 package com.fadgiras.exos.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -11,23 +12,29 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.itextpdf.kernel.color.Color;
-import com.itextpdf.kernel.color.DeviceCmyk;
-import com.itextpdf.kernel.color.DeviceRgb;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.DeviceCmyk;
+import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Text;
-import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.svg.converter.SvgConverter;
+import com.itextpdf.svg.processors.ISvgConverterProperties;
+import com.itextpdf.svg.processors.impl.SvgConverterProperties;
 import com.fasterxml.jackson.datatype.jsr310.util.DurationUnitConverter;
-import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 
 
 @RestController
@@ -62,13 +69,10 @@ public class PdfController {
             Paragraph paragraph = new Paragraph(content);
             
             FontProgram fontProgram = FontProgramFactory.createFont(MARIANNE_BOLD);
-            PdfFont marianne = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI, true);
+            PdfFont marianne = PdfFontFactory.createFont(fontProgram, PdfEncodings.WINANSI);
             paragraph.setFont(marianne);
 
             document.add(paragraph);
-
-            document.add(new Paragraph("République".toUpperCase()).setFont(marianne).setFontSize(15).setTextAlignment(TextAlignment.LEFT).setFixedPosition(10, pdf.getDefaultPageSize().getHeight()-40, 200));
-            document.add(new Paragraph("française".toUpperCase()).setFont(marianne).setFontSize(15).setTextAlignment(TextAlignment.LEFT).setFixedPosition(10, pdf.getDefaultPageSize().getHeight()- 55, 200));
 
             Text title1 = new Text("The Strange Case of ").setFontSize(12);
             Text title2 = new Text("Dr. Jekyll and Mr. Hyde").setFontSize(16);
@@ -95,6 +99,30 @@ public class PdfController {
             list.add("Jenkins");
             list.add("Elastic Search");
             document.add(list);
+
+            
+            String SVG_FILE = "C:/Users/loc-florian.mayeux-g/Documents/GitHub/MavenExos/test/src/main/resources/Bloc_Marianne.svg"; 
+            // ISvgConverterProperties properties = new SvgConverterProperties().setBaseUri(SVG_FILE);
+
+            int base = 24;
+            SvgConverter.drawOnDocument(new FileInputStream(SVG_FILE), pdf, 1, base, pdf.getDefaultPageSize().getHeight()-base*2);
+            // SvgConverter.drawOnDocument(new FileInputStream(SVG_FILE), pdf, 1, 90, pdf.getDefaultPageSize().getHeight()-base);
+            // SvgConverter.drawOnDocument(new FileInputStream(SVG_FILE), pdf, 1, 90, (float) (pdf.getDefaultPageSize().getHeight()-base*2.5));
+            // SvgConverter.drawOnDocument(new FileInputStream(SVG_FILE), pdf, 1, 90, (float) (pdf.getDefaultPageSize().getHeight()-base*3.5));
+            // SvgConverter.drawOnDocument(new FileInputStream(SVG_FILE), pdf, 1, 89, (float) (pdf.getDefaultPageSize().getHeight()-((base*4.5)-2)));
+
+            document.add(
+                new Paragraph("République".toUpperCase())
+                .setFont(marianne).setFontSize((float) base)
+                .setTextAlignment(TextAlignment.LEFT)
+                .setFixedPosition((float)(base-2.5)/* -2.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75)-2)), 200));
+
+            document.add(
+                new Paragraph("française".toUpperCase())
+                .setFont(marianne).setFontSize((float) base)
+                .setTextAlignment(TextAlignment.LEFT)
+                .setFixedPosition((float)(base-2.5)/* -2.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75)+3)), 200));
+
 
             // step 3
             document.close();
