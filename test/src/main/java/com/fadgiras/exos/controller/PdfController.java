@@ -46,19 +46,19 @@ public class PdfController {
                 new Paragraph("Liberté")
                 .setFont(font).setFontSize((float) base-6)
                 .setTextAlignment(TextAlignment.LEFT)
-                .setFixedPosition((float)(base-.5)/* -.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*(nbLignes+3.75)))), 200));
+                .setFixedPosition((float)(base-.5)/* -.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*(nbLignes+3.75)))), (float)(pdf.getDefaultPageSize().getWidth())));
             
             document.add(
                 new Paragraph("Égalité")
                 .setFont(font).setFontSize((float) base-6)
                 .setTextAlignment(TextAlignment.LEFT)
-                .setFixedPosition((float)(base-.5)/* -.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*(nbLignes+4.40)))), 200));
+                .setFixedPosition((float)(base-.5)/* -.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*(nbLignes+4.40)))), (float)(pdf.getDefaultPageSize().getWidth())));
             
             document.add(
                 new Paragraph("Fraternité")
                 .setFont(font).setFontSize((float) base-6)
                 .setTextAlignment(TextAlignment.LEFT)
-                .setFixedPosition((float)(base-.5)/* -.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*(nbLignes+5.05)))), 200));
+                .setFixedPosition((float)(base-.5)/* -.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*(nbLignes+5.05)))), (float)(pdf.getDefaultPageSize().getWidth())));
     }
 
 
@@ -71,7 +71,7 @@ public class PdfController {
             new Paragraph(Ligne1.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         devise(document, pdf, spectrali, base, 1);
     }
@@ -85,13 +85,13 @@ public class PdfController {
             new Paragraph(Ligne1.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne2.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         devise(document, pdf, spectrali, base, 2);
     }
@@ -105,19 +105,19 @@ public class PdfController {
             new Paragraph(Ligne1.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne2.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne3.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), (float)(pdf.getDefaultPageSize().getWidth())));
             
         devise(document, pdf, spectrali, base, 3);
     }
@@ -131,25 +131,25 @@ public class PdfController {
             new Paragraph(Ligne1.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne2.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne3.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne4.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*6.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*6.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         devise(document, pdf, spectrali, base, 4);
     }
@@ -163,27 +163,33 @@ public class PdfController {
             new Paragraph(Ligne1.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne2.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne3.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne4.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*6.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*6.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
-        devise(document, pdf, spectrali, base, 2);
+        document.add(
+            new Paragraph(Ligne5.toUpperCase())
+            .setFont(marianneb).setFontSize((float) base+1)
+            .setTextAlignment(TextAlignment.LEFT)
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*7.75))), (float)(pdf.getDefaultPageSize().getWidth())));
+
+        devise(document, pdf, spectrali, base, 5);
     }
 
     private void blocMarianne(String Ligne1, String Ligne2, String Ligne3, String Ligne4, String Ligne5, String Ligne6, Document document, PdfDocument pdf, PdfFont marianneb, PdfFont spectrali) throws FileNotFoundException, IOException{
@@ -195,39 +201,39 @@ public class PdfController {
             new Paragraph(Ligne1.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*3.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne2.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*4.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne3.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*5.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
             new Paragraph(Ligne4.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*6.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*6.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
-            new Paragraph(Ligne4.toUpperCase())
+            new Paragraph(Ligne5.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*7.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*7.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
         document.add(
-            new Paragraph(Ligne4.toUpperCase())
+            new Paragraph(Ligne6.toUpperCase())
             .setFont(marianneb).setFontSize((float) base+1)
             .setTextAlignment(TextAlignment.LEFT)
-            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*8.75))), 200));
+            .setFixedPosition((float)(base-1.5)/* -1.5 because of the offset*/,(float)(pdf.getDefaultPageSize().getHeight()-((base*8.75))), (float)(pdf.getDefaultPageSize().getWidth())));
 
-        devise(document, pdf, spectrali, base, 2);
+        devise(document, pdf, spectrali, base, 6);
     }
 
     
@@ -293,9 +299,9 @@ public class PdfController {
             // list.add("Elastic Search");
             // document.add(list);
 
-            blocMarianne("République","Française",document, pdf, marianneb, spectrali);
+            blocMarianne("Ministère","des tests",document, pdf, marianneb, spectrali);
 
-            
+
 
             // step 3
             document.close();
