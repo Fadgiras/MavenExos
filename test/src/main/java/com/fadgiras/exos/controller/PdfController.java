@@ -4,6 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -608,7 +611,9 @@ public class PdfController {
             
             float[] cols = {250F,250F};
 
-            titre("Demande d'agrément TXXXXXXXXXXX-X / 01/01/1900 20:51", document, marianneb);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS");
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            titre("Demande d'agrément TXXXXXXXXXXX-X / " + sdf.format(timestamp), document, marianneb);
 
             donneesAccord(  
                             "Décision notifiée",
